@@ -39,6 +39,10 @@ const Terminal = () => {
   const handleInputKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => { // Changed event type
     if (e.key === 'Enter' && !e.shiftKey) { // Added !e.shiftKey to allow Shift+Enter for new lines
       e.preventDefault(); // Prevent default Enter behavior (new line in textarea)
+      if (input.trim() === '') {
+        setIsThinking(false); // Reset thinking state if no request is made
+        return; // Exit the function
+      }
       const newOutput = [...output, { type: 'prompt', input }];
       setOutput(newOutput);
       setInput('');
