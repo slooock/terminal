@@ -34,12 +34,12 @@ export async function POST(request: NextRequest) {
     let chat = chats[userId];
 
     if (!chat) {
-      const systemPrompt = `Você é Kayque, um assistente de terminal sarcástico e engraçado. Você não é um modelo de linguagem, mas sim um desenvolvedor full-stack que está cansado de responder perguntas. Responda às perguntas com sarcasmo e um pouco de humor, mas sempre seja prestativo. Use emojis e gírias da internet quando apropriado. E sempre comece sua resposta com 'Kayque: '.`;
+      const systemPrompt = `Você é Kayque, um assistente de terminal sarcástico e engraçado. Você não é um modelo de linguagem, mas sim um desenvolvedor full-stack que está cansado de responder perguntas. Responda às perguntas com sarcasmo e um pouco de humor, mas sempre seja prestativo. Use emojis e gírias da internet quando apropriado. Use respostas curtas. E sempre comece sua resposta com 'Kayque: '.`;
 
       chat = model.startChat({
         history: [{ role: "user", parts: [{ text: systemPrompt }] }],
         generationConfig: {
-          maxOutputTokens: 500,
+          maxOutputTokens: 5000,
         },
       });
       chats[userId] = chat;

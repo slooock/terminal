@@ -1,10 +1,11 @@
-
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 
+import Prompt from './Prompt';
+
 const Terminal = () => {
   const [input, setInput] = useState('');
-  const [output, setOutput] = useState<string[]>([]);
+  const [output, setOutput] = useState<any[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalBodyRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +30,7 @@ const Terminal = () => {
 
   const handleInputKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      const newOutput = [...output, `kayque-site ~ % ${input}`];
+      const newOutput = [...output, { type: 'prompt', input }];
       setOutput(newOutput);
       setInput('');
       setIsThinking(true);
@@ -93,29 +94,24 @@ const Terminal = () => {
         <div className="w-20"></div>
       </div>
       <div ref={terminalBodyRef} className="p-4 flex-grow overflow-y-auto">
-        {output.map((line, index) => (
-          <div
-            key={index}
-            className={line.startsWith('Gemini:') ? 'text-purple-400' : ''}
-          >
-            {line}
-          </div>
-        ))}
-        {isThinking && <div className="text-purple-400">Gemini is thinking...</div>}
+        {output.map((line, index) => {
+          if (typeof line === 'string') {
+            return <div key={index} className={line.startsWith('Kayque:') ? 'text-purple-400' : ''}>{line}</div>;
+          } else if (line.type === 'prompt') {
+            return <Prompt key={index} input={line.input} />;
+          }
+          return null;
+        })}
+        {isThinking && <div className="text-purple-400">Kayque is thinking...</div>}
         <div className="flex items-center">
-          <span className="text-cyan-400 pr-2 whitespace-nowrap">kayque-site</span>
-          <span className="text-gray-500"> in </span>
-          <span className="text-yellow-400">~</span>
-          <span className="text-green-400"> took </span>
-          <span className="text-gray-500">1s</span>
-          <span className="text-red-500"> ❯ </span>
+          <Prompt input="" />
           <input
             ref={inputRef}
             type="text"
             value={input}
             onChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
-            className="bg-transparent outline-none w-full ml-2"
+            className="bg-transparent outline-none w-full"
           />
         </div>
       </div>
