@@ -6,13 +6,13 @@ import Prompt from './Prompt';
 const Terminal = () => {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState<any[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null); // Changed to HTMLTextAreaElement
   const terminalBodyRef = useRef<HTMLDivElement>(null);
 
   const [isThinking, setIsThinking] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => { // Changed event type
     setInput(e.target.value);
   };
 
@@ -28,8 +28,17 @@ const Terminal = () => {
     setUserId(Math.random().toString(36).substring(7));
   }, []);
 
-  const handleInputKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+  // Auto-resize textarea
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto'; // Reset height
+      inputRef.current.style.height = inputRef.current.scrollHeight + 'px'; // Set to scroll height
+    }
+  }, [input]);
+
+  const handleInputKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => { // Changed event type
+    if (e.key === 'Enter' && !e.shiftKey) { // Added !e.shiftKey to allow Shift+Enter for new lines
+      e.preventDefault(); // Prevent default Enter behavior (new line in textarea)
       const newOutput = [...output, { type: 'prompt', input }];
       setOutput(newOutput);
       setInput('');
@@ -103,15 +112,16 @@ const Terminal = () => {
           return null;
         })}
         {isThinking && <div className="text-purple-400">Kayque is thinking...</div>}
-        <div className="flex items-center">
+        <div>
           <Prompt input="" />
-          <input
+          <textarea
             ref={inputRef}
-            type="text"
             value={input}
             onChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
-            className="bg-transparent outline-none w-full"
+            className="bg-transparent outline-none w-full resize-none"
+            rows={1}
+            style={{ overflowY: 'hidden', wordBreak: 'break-all' }}
           />
         </div>
       </div>
