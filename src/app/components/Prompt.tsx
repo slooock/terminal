@@ -8,8 +8,6 @@ const Prompt = ({ input }: { input: string }) => {
       <span className="text-gray-500"> in </span>
       <span className="text-yellow-400">~</span>
       <span className="text-green-400"> took </span>
-      <span className="text-gray-500">1s</span>
-      <span className="text-red-500"> ❯ </span>
       <span className="ml-2">{input}</span>
     </div>
   );

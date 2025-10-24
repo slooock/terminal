@@ -114,6 +114,9 @@ const Terminal = () => {
         {isThinking && <div className="text-purple-400">Kayque is thinking...</div>}
         <div>
           <Prompt input="" />
+        </div>
+        <div className="flex items-start">
+          <span className="text-red-500">❯</span>
           <textarea
             ref={inputRef}
             value={input}
@@ -121,7 +124,7 @@ const Terminal = () => {
             onKeyDown={handleInputKeyDown}
             className="bg-transparent outline-none w-full resize-none"
             rows={1}
-            style={{ overflowY: 'hidden', wordBreak: 'break-all' }}
+            style={{ overflowY: 'hidden', wordBreak: 'break-all', textIndent: '10px' }}
           />
         </div>
       </div>
